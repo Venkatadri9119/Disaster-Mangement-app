@@ -9,10 +9,9 @@ interface Props {
 }
 
 export function LandingLoginPage({ onLoginSuccess }: Props) {
-  const [authMode, setAuthMode] = useState<"LOGIN" | "SIGNUP">("SIGNUP");
   const [selectedRole, setSelectedRole] = useState<RoleType>("USER");
   
-  // Fields
+  // Registration Fields
   const [name, setName] = useState("");
   const [phoneOrEmail, setPhoneOrEmail] = useState("");
   const [otpOrPassword, setOtpOrPassword] = useState("");
@@ -25,7 +24,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    let finalName = name || (selectedRole === "USER" ? "Venkat Rao" : (selectedRole === "COORDINATOR" ? "Coordinator Ravi" : "State Disaster Admin"));
+    let finalName = name || (selectedRole === "USER" ? "Venkat Rao" : (selectedRole === "COORDINATOR" ? "Coordinator Ravi" : "State Disaster Officer"));
     let finalPhone = phoneOrEmail || (selectedRole === "ADMIN" ? "+919900000001" : "+919123456789");
 
     try {
@@ -95,12 +94,12 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
 
   return (
     <div className="min-h-screen bg-white text-[#000000] flex flex-col justify-between font-sans">
-      {/* Dual Column Layout matching Instagram Screenshot */}
+      {/* Dual Column Layout */}
       <div className="flex-1 w-full max-w-[1240px] mx-auto grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
         
         {/* Left Showcase Column */}
         <div className="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-between border-r border-[#EFEFEF]">
-          {/* Top Logo Glyph */}
+          {/* Top Logo */}
           <div className="flex items-center space-x-3">
             <div className="w-14 h-14 rounded-[18px] bg-gradient-to-tr from-[#FCAF45] via-[#E4405F] to-[#833AB4] flex items-center justify-center shadow-lg shadow-pink-500/20">
               <ShieldAlert className="w-8 h-8 text-white" />
@@ -158,18 +157,18 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
           </div>
         </div>
 
-        {/* Right Form Column */}
+        {/* Right Form Column (ONLY REGISTRATION PAGE) */}
         <div className="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-center max-w-[420px] w-full mx-auto">
           
-          {/* Heading */}
-          <h2 className="text-[20px] font-semibold text-[#000000] mb-6">
-            {authMode === "LOGIN" ? "Log into Hopeforce" : "Sign up for Hopeforce"}
+          {/* Registration Title */}
+          <h2 className="text-[20px] font-bold text-[#000000] mb-6">
+            Sign up for Hopeforce
           </h2>
 
-          {/* EXACT 3 ROLE SELECTION BUTTONS */}
+          {/* 3 ROLE SELECTION BUTTONS */}
           <div className="mb-5">
             <label className="block text-[11px] font-bold text-[#737373] uppercase tracking-wider mb-2">
-              Select Login Role:
+              Select Registration Role:
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
@@ -218,20 +217,18 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
             )}
           </div>
 
-          {/* Form Fields */}
+          {/* Registration Form Inputs */}
           <form onSubmit={handleSubmit} className="space-y-3">
-            {authMode === "SIGNUP" && (
-              <div>
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  required
-                  className="w-full bg-[#FFFFFF] border border-[#0095F6] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition"
-                />
-              </div>
-            )}
+            <div>
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                required
+                className="w-full bg-[#FFFFFF] border border-[#0095F6] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition shadow-xs"
+              />
+            </div>
 
             <div>
               <input
@@ -255,7 +252,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
               />
             </div>
 
-            {selectedRole === "USER" && authMode === "SIGNUP" && (
+            {selectedRole === "USER" && (
               <div>
                 <select
                   value={preferredLanguage}
@@ -268,13 +265,13 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
               </div>
             )}
 
-            {/* Simple 1-2 Word Button */}
+            {/* Registration Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
               className="w-full py-3 bg-[#4CB5F9] hover:bg-[#0095F6] text-white font-bold text-[14px] rounded-2xl transition mt-2 shadow-xs"
             >
-              {authMode === "LOGIN" ? "Log in" : "Sign up"}
+              Sign up
             </button>
           </form>
 
@@ -306,27 +303,6 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
                 Admin
               </button>
             </div>
-          </div>
-
-          {/* Switcher */}
-          <div className="mt-4 text-center">
-            {authMode === "LOGIN" ? (
-              <button
-                type="button"
-                onClick={() => setAuthMode("SIGNUP")}
-                className="w-full py-3 border border-[#0095F6] text-[#0095F6] font-bold text-[14px] rounded-full hover:bg-blue-50 transition"
-              >
-                Create new account
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setAuthMode("LOGIN")}
-                className="w-full py-3 border border-[#DBDBDB] text-[#000000] font-bold text-[14px] rounded-full hover:bg-[#F4F4F4] transition"
-              >
-                Back to Log in
-              </button>
-            )}
           </div>
 
           {/* Bottom Branding */}
