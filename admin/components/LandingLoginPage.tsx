@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { RoleType } from "@/components/RoleSelectorBar";
-import { ShieldAlert, User, HeartHandshake, Phone, Lock, Bot, MapPin, Sparkles } from "lucide-react";
+import { ShieldAlert, User, Compass, Shield } from "lucide-react";
 
 interface Props {
   onLoginSuccess: (user: { user_id: string; name: string; role: RoleType; token: string; phone: string; preferred_language: string }) => void;
@@ -10,7 +10,7 @@ interface Props {
 
 export function LandingLoginPage({ onLoginSuccess }: Props) {
   const [authMode, setAuthMode] = useState<"LOGIN" | "SIGNUP">("LOGIN");
-  const [selectedRole, setSelectedRole] = useState<RoleType>("CITIZEN");
+  const [selectedRole, setSelectedRole] = useState<RoleType>("USER");
   
   // Fields
   const [name, setName] = useState("");
@@ -25,7 +25,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    let finalName = name || (selectedRole === "CITIZEN" ? "Venkat Rao" : (selectedRole === "VOLUNTEER" ? "Volunteer Ravi" : "District Disaster Officer"));
+    let finalName = name || (selectedRole === "USER" ? "Venkat Rao" : (selectedRole === "COORDINATOR" ? "Coordinator Ravi" : "State Disaster Admin"));
     let finalPhone = phoneOrEmail || (selectedRole === "ADMIN" ? "+919900000001" : "+919123456789");
 
     try {
@@ -77,17 +77,17 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
 
   const fillQuickDemo = (role: RoleType) => {
     setSelectedRole(role);
-    if (role === "CITIZEN") {
+    if (role === "USER") {
       setName("Venkat Rao");
       setPhoneOrEmail("+919123456789");
       setOtpOrPassword("123456");
       setPreferredLanguage("en");
-    } else if (role === "VOLUNTEER") {
-      setName("Ravi Kumar (Rescue Specialist)");
+    } else if (role === "COORDINATOR") {
+      setName("Ravi Kumar (Rescue & Shelter Coordinator)");
       setPhoneOrEmail("+919876543210");
       setOtpOrPassword("123456");
     } else if (role === "ADMIN") {
-      setName("District Disaster Officer");
+      setName("State Disaster Officer");
       setPhoneOrEmail("admin@disasterai.org");
       setOtpOrPassword("password123");
     }
@@ -98,16 +98,17 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
       {/* Dual Column Layout matching Instagram Screenshot */}
       <div className="flex-1 w-full max-w-[1240px] mx-auto grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
         
-        {/* Left Showcase Column (Exactly like Screenshot Left Side) */}
+        {/* Left Showcase Column */}
         <div className="lg:col-span-7 p-8 sm:p-12 lg:p-16 flex flex-col justify-between border-r border-[#EFEFEF]">
           {/* Top Logo Glyph */}
           <div className="flex items-center space-x-3">
             <div className="w-14 h-14 rounded-[18px] bg-gradient-to-tr from-[#FCAF45] via-[#E4405F] to-[#833AB4] flex items-center justify-center shadow-lg shadow-pink-500/20">
               <ShieldAlert className="w-8 h-8 text-white" />
             </div>
+            <span className="font-black text-2xl tracking-tight text-[#000000]">Disaster AI</span>
           </div>
 
-          {/* Large Hero Typography matching Screenshot */}
+          {/* Hero Typography */}
           <div className="my-auto max-w-xl py-6">
             <h1 className="text-[44px] sm:text-[52px] font-bold text-[#000000] tracking-[-0.03em] leading-[1.12]">
               Get emergency help from your{" "}
@@ -126,7 +127,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#FF007A] to-[#E4405F] flex items-center justify-center text-white text-xs font-bold">AI</div>
                   <div>
                     <p className="text-xs font-bold text-[#000000]">Disaster AI Assistant</p>
-                    <p className="text-[10px] text-[#737373]">English & Telugu STT Active</p>
+                    <p className="text-[10px] text-[#737373]">Telugu & English STT Active</p>
                   </div>
                 </div>
                 <p className="text-xs text-[#262626] font-medium">"మా ఇంట్లోకి వరద నీళ్లు వచ్చాయి. మేము ఐదుగురం ఉన్నాం."</p>
@@ -137,9 +138,9 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
 
               <div className="absolute w-80 bg-slate-900 text-white rounded-3xl border border-slate-700 shadow-2xl p-4 transform rotate-6 z-20">
                 <div className="flex items-center space-x-2 border-b border-slate-700 pb-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-[#0095F6] flex items-center justify-center text-white text-xs font-bold">⛵</div>
+                  <div className="w-8 h-8 rounded-full bg-[#0095F6] flex items-center justify-center text-white text-xs font-bold">🤝</div>
                   <div>
-                    <p className="text-xs font-bold text-white">Rescue Unit Ravi</p>
+                    <p className="text-xs font-bold text-white">Helper Ravi</p>
                     <p className="text-[10px] text-blue-300">Boat Specialist • 1.2km away</p>
                   </div>
                 </div>
@@ -153,61 +154,71 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
           </div>
 
           <div className="text-xs text-[#737373] font-medium">
-            Emergency Triage & Geospatial Rescue System
+            AI Disaster Response & Emergency Coordination System
           </div>
         </div>
 
-        {/* Right Form Column (Pixel-for-Pixel matching Screenshot Right Side) */}
+        {/* Right Form Column */}
         <div className="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-center max-w-[420px] w-full mx-auto">
           
-          {/* Heading matching Screenshot */}
+          {/* Heading */}
           <h2 className="text-[20px] font-semibold text-[#000000] mb-6">
             {authMode === "LOGIN" ? "Log into Disaster AI" : "Sign up for Disaster AI"}
           </h2>
 
-          {/* Role Choice Selector Pills */}
+          {/* EXACT 3 ROLE SELECTION BUTTONS */}
           <div className="mb-5">
             <label className="block text-[11px] font-bold text-[#737373] uppercase tracking-wider mb-2">
-              Select Your Role:
+              Select Login Role:
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => setSelectedRole("CITIZEN")}
-                className={`py-2 px-1 rounded-xl text-xs font-semibold transition border ${
-                  selectedRole === "CITIZEN"
-                    ? "bg-[#FF007A]/10 border-[#FF007A] text-[#FF007A]"
+                onClick={() => setSelectedRole("USER")}
+                className={`py-2.5 px-1 rounded-xl text-xs font-bold transition border flex flex-col items-center justify-center gap-1 ${
+                  selectedRole === "USER"
+                    ? "bg-[#FF007A]/10 border-[#FF007A] text-[#FF007A] shadow-xs"
                     : "bg-[#FAFAFA] border-[#DBDBDB] text-[#262626] hover:bg-[#F4F4F4]"
                 }`}
               >
-                1. Citizen
+                <User className="w-4 h-4 text-[#FF007A]" />
+                <span>USER</span>
               </button>
+
               <button
                 type="button"
-                onClick={() => setSelectedRole("VOLUNTEER")}
-                className={`py-2 px-1 rounded-xl text-xs font-semibold transition border ${
-                  selectedRole === "VOLUNTEER"
-                    ? "bg-[#0095F6]/10 border-[#0095F6] text-[#0095F6]"
+                onClick={() => setSelectedRole("COORDINATOR")}
+                className={`py-2.5 px-1 rounded-xl text-xs font-bold transition border flex flex-col items-center justify-center gap-1 ${
+                  selectedRole === "COORDINATOR"
+                    ? "bg-[#0095F6]/10 border-[#0095F6] text-[#0095F6] shadow-xs"
                     : "bg-[#FAFAFA] border-[#DBDBDB] text-[#262626] hover:bg-[#F4F4F4]"
                 }`}
               >
-                2. Volunteer
+                <Compass className="w-4 h-4 text-[#0095F6]" />
+                <span>COORDINATOR</span>
               </button>
+
               <button
                 type="button"
                 onClick={() => setSelectedRole("ADMIN")}
-                className={`py-2 px-1 rounded-xl text-xs font-semibold transition border ${
+                className={`py-2.5 px-1 rounded-xl text-xs font-bold transition border flex flex-col items-center justify-center gap-1 ${
                   selectedRole === "ADMIN"
-                    ? "bg-amber-500/10 border-amber-500 text-amber-700"
+                    ? "bg-amber-500/10 border-amber-500 text-amber-700 shadow-xs"
                     : "bg-[#FAFAFA] border-[#DBDBDB] text-[#262626] hover:bg-[#F4F4F4]"
                 }`}
               >
-                3. Admin
+                <Shield className="w-4 h-4 text-amber-700" />
+                <span>ADMIN</span>
               </button>
             </div>
+            {selectedRole === "USER" && (
+              <p className="text-[10px] text-[#737373] mt-1.5 text-center font-medium">
+                One account for <strong>🆘 Get Help</strong> & <strong>🤝 Help Others</strong>
+              </p>
+            )}
           </div>
 
-          {/* Form Fields Styled Exactly like Screenshot Inputs */}
+          {/* Form Fields */}
           <form onSubmit={handleSubmit} className="space-y-3">
             {authMode === "SIGNUP" && (
               <div>
@@ -217,7 +228,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   required
-                  className="w-full bg-[#FFFFFF] border border-[#0095F6] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3.5 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition"
+                  className="w-full bg-[#FFFFFF] border border-[#0095F6] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition"
                 />
               </div>
             )}
@@ -229,7 +240,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
                 value={phoneOrEmail}
                 onChange={e => setPhoneOrEmail(e.target.value)}
                 required
-                className="w-full bg-[#FFFFFF] border border-[#0095F6] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3.5 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition shadow-sm"
+                className="w-full bg-[#FFFFFF] border border-[#0095F6] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition shadow-xs"
               />
             </div>
 
@@ -240,16 +251,16 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
                 value={otpOrPassword}
                 onChange={e => setOtpOrPassword(e.target.value)}
                 required
-                className="w-full bg-[#FFFFFF] border border-[#DBDBDB] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3.5 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition"
+                className="w-full bg-[#FFFFFF] border border-[#DBDBDB] focus:border-[#0095F6] focus:ring-2 focus:ring-[#0095F6]/20 rounded-xl px-4 py-3 text-[14px] text-[#000000] placeholder-[#737373] focus:outline-none transition"
               />
             </div>
 
-            {selectedRole === "CITIZEN" && authMode === "SIGNUP" && (
+            {selectedRole === "USER" && authMode === "SIGNUP" && (
               <div>
                 <select
                   value={preferredLanguage}
                   onChange={e => setPreferredLanguage(e.target.value)}
-                  className="w-full bg-[#FAFAFA] border border-[#DBDBDB] rounded-xl px-3 py-3 text-[13px] text-[#000000] focus:outline-none focus:border-[#0095F6]"
+                  className="w-full bg-[#FAFAFA] border border-[#DBDBDB] rounded-xl px-3 py-2.5 text-[13px] text-[#000000] focus:outline-none focus:border-[#0095F6]"
                 >
                   <option value="en">Language: English</option>
                   <option value="te">Language: Telugu (తెలుగు)</option>
@@ -257,46 +268,53 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
               </div>
             )}
 
-            {/* Log In Button (Instagram Blue Button Matching Screenshot) */}
+            {/* Simple 1-2 Word Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-[#4CB5F9] hover:bg-[#0095F6] text-white font-semibold text-[14px] rounded-2xl transition mt-2 shadow-sm"
+              className="w-full py-3 bg-[#4CB5F9] hover:bg-[#0095F6] text-white font-bold text-[14px] rounded-2xl transition mt-2 shadow-xs"
             >
               {authMode === "LOGIN" ? "Log in" : "Sign up"}
             </button>
           </form>
 
-          {/* Forgot Password Link Matching Screenshot */}
-          <div className="text-center mt-4">
-            <button
-              type="button"
-              onClick={() => fillQuickDemo(selectedRole)}
-              className="text-[14px] font-semibold text-[#000000] hover:underline"
-            >
-              Forgot password?
-            </button>
+          {/* Quick Demo Shortcuts */}
+          <div className="mt-5 p-3 bg-[#FAFAFA] rounded-2xl border border-[#EFEFEF] text-center">
+            <p className="text-[10px] font-bold text-[#737373] uppercase tracking-wider mb-2">
+              1-Click Demo Logins:
+            </p>
+            <div className="flex justify-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => fillQuickDemo("USER")}
+                className="px-3 py-1.5 bg-white border border-[#DBDBDB] rounded-xl text-xs font-bold text-[#FF007A] hover:bg-rose-50"
+              >
+                User
+              </button>
+              <button
+                type="button"
+                onClick={() => fillQuickDemo("COORDINATOR")}
+                className="px-3 py-1.5 bg-white border border-[#DBDBDB] rounded-xl text-xs font-bold text-[#0095F6] hover:bg-blue-50"
+              >
+                Coordinator
+              </button>
+              <button
+                type="button"
+                onClick={() => fillQuickDemo("ADMIN")}
+                className="px-3 py-1.5 bg-white border border-[#DBDBDB] rounded-xl text-xs font-bold text-amber-700 hover:bg-amber-50"
+              >
+                Admin
+              </button>
+            </div>
           </div>
 
-          {/* Log in with Phone OTP (Gray Pill Button Matching Screenshot) */}
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => fillQuickDemo("CITIZEN")}
-              className="w-full py-3 bg-[#F4F4F4] hover:bg-[#EFEFEF] text-[#000000] font-semibold text-[14px] rounded-full transition flex items-center justify-center gap-2"
-            >
-              <Phone className="w-4 h-4 text-[#0095F6]" />
-              <span>Log in with Phone OTP</span>
-            </button>
-          </div>
-
-          {/* Create New Account Button (Blue Outline Pill Button Matching Screenshot) */}
-          <div className="mt-3">
+          {/* Switcher */}
+          <div className="mt-4 text-center">
             {authMode === "LOGIN" ? (
               <button
                 type="button"
                 onClick={() => setAuthMode("SIGNUP")}
-                className="w-full py-3 border border-[#0095F6] text-[#0095F6] font-semibold text-[14px] rounded-full hover:bg-blue-50 transition"
+                className="w-full py-3 border border-[#0095F6] text-[#0095F6] font-bold text-[14px] rounded-full hover:bg-blue-50 transition"
               >
                 Create new account
               </button>
@@ -304,45 +322,15 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
               <button
                 type="button"
                 onClick={() => setAuthMode("LOGIN")}
-                className="w-full py-3 border border-[#DBDBDB] text-[#000000] font-semibold text-[14px] rounded-full hover:bg-[#F4F4F4] transition"
+                className="w-full py-3 border border-[#DBDBDB] text-[#000000] font-bold text-[14px] rounded-full hover:bg-[#F4F4F4] transition"
               >
                 Back to Log in
               </button>
             )}
           </div>
 
-          {/* Quick Demo Shortcuts Box */}
-          <div className="mt-6 p-3 bg-[#FAFAFA] rounded-2xl border border-[#EFEFEF] text-center">
-            <p className="text-[10px] font-bold text-[#737373] uppercase tracking-wider mb-2">
-              1-Click Demo Shortcut Presets:
-            </p>
-            <div className="flex justify-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => fillQuickDemo("CITIZEN")}
-                className="px-2.5 py-1 bg-white border border-[#DBDBDB] rounded-lg text-[11px] font-bold text-[#FF007A] hover:bg-rose-50"
-              >
-                Demo Citizen
-              </button>
-              <button
-                type="button"
-                onClick={() => fillQuickDemo("VOLUNTEER")}
-                className="px-2.5 py-1 bg-white border border-[#DBDBDB] rounded-lg text-[11px] font-bold text-[#0095F6] hover:bg-blue-50"
-              >
-                Demo Volunteer
-              </button>
-              <button
-                type="button"
-                onClick={() => fillQuickDemo("ADMIN")}
-                className="px-2.5 py-1 bg-white border border-[#DBDBDB] rounded-lg text-[11px] font-bold text-amber-700 hover:bg-amber-50"
-              >
-                Demo Admin
-              </button>
-            </div>
-          </div>
-
-          {/* Bottom Branding Matching Screenshot (∞ Meta Style) */}
-          <div className="mt-8 text-center text-[14px] text-[#0095F6] font-semibold flex items-center justify-center gap-1">
+          {/* Bottom Branding */}
+          <div className="mt-6 text-center text-[14px] text-[#0095F6] font-semibold flex items-center justify-center gap-1">
             <span className="text-[18px]">∞</span>
             <span>Disaster AI</span>
           </div>
@@ -351,23 +339,18 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
 
       </div>
 
-      {/* Footer Links Matching Screenshot Bottom Bar */}
+      {/* Footer */}
       <footer className="w-full border-t border-[#EFEFEF] py-4 px-6 text-[12px] text-[#737373] flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-        <span>Meta</span>
         <span>About</span>
-        <span>Blog</span>
-        <span>Jobs</span>
-        <span>Help</span>
+        <span>Emergency Help</span>
+        <span>Shelters</span>
+        <span>Food</span>
+        <span>Hospitals</span>
+        <span>Resources</span>
         <span>API</span>
         <span>Privacy</span>
         <span>Terms</span>
-        <span>Locations</span>
-        <span>Popular</span>
-        <span>Disaster AI Lite</span>
-        <span>Meta AI</span>
-        <span>Threads</span>
-        <span>Contact Uploading & Non-Users</span>
-        <span>Meta Verified</span>
+        <span>Disaster AI Verified</span>
       </footer>
     </div>
   );

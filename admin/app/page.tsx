@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { RoleType } from "@/components/RoleSelectorBar";
 import { LandingLoginPage } from "@/components/LandingLoginPage";
-import { CitizenPortal } from "@/components/CitizenPortal";
-import { VolunteerPortal } from "@/components/VolunteerPortal";
+import { UserPortal } from "@/components/UserPortal";
+import { CoordinatorPortal } from "@/components/CoordinatorPortal";
+import { AdminPortal } from "@/components/AdminPortal";
 import { Navbar } from "@/components/Navbar";
 import { MetricsOverview } from "@/components/MetricsOverview";
 import { AIAlertBanner } from "@/components/AIAlertBanner";
@@ -14,7 +15,7 @@ import { HotspotPanel } from "@/components/HotspotPanel";
 import { ResourceShelterGrid } from "@/components/ResourceShelterGrid";
 import { LogOut, UserCheck } from "lucide-react";
 
-export default function AdminDashboardPage() {
+export default function AppMainPage() {
   const [currentUser, setCurrentUser] = useState<{
     user_id: string;
     name: string;
@@ -23,8 +24,6 @@ export default function AdminDashboardPage() {
     phone: string;
     preferred_language: string;
   } | null>(null);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const [metrics, setMetrics] = useState({
     total_emergencies: 18,
@@ -42,12 +41,12 @@ export default function AdminDashboardPage() {
   const [aiAlert, setAiAlert] = useState({
     title: "AI Detected 6 Critical Emergency Requests in Flood Sector",
     summary: "High density of trapped citizens near Krishna Riverbank. 4 mother & infant medical requests require immediate boat dispatch.",
-    recommended_action: "Dispatch Volunteer Ravi (1.2km) and Boat Unit 4 to Krishna Riverbank Colony."
+    recommended_action: "Dispatch Helper Ravi (1.2km) and Boat Unit 4 to Krishna Riverbank Colony."
   });
 
   const [requests, setRequests] = useState([
     {
-      id: "req-101",
+      id: "REQ-101",
       citizen_name: "Venkat Rao",
       citizen_phone: "+919123456789",
       disaster_type: "flood",
@@ -55,12 +54,12 @@ export default function AdminDashboardPage() {
       medical_need: true,
       evacuation_required: true,
       priority: "CRITICAL" as const,
-      status: "AI_PRIORITIZED",
+      status: "Assigned",
       address_text: "House #12, Krishna Riverbank Colony, Vijayawada",
       created_at: new Date().toISOString()
     },
     {
-      id: "req-102",
+      id: "REQ-102",
       citizen_name: "Anitha Chary",
       citizen_phone: "+919123456788",
       disaster_type: "building_collapse",
@@ -68,12 +67,12 @@ export default function AdminDashboardPage() {
       medical_need: true,
       evacuation_required: true,
       priority: "CRITICAL" as const,
-      status: "SUBMITTED",
+      status: "New",
       address_text: "Plot 45, Near Old Bus Stand, Vijayawada",
       created_at: new Date().toISOString()
     },
     {
-      id: "req-103",
+      id: "REQ-103",
       citizen_name: "Srinivas Raju",
       citizen_phone: "+919123456787",
       disaster_type: "cyclone",
@@ -81,7 +80,7 @@ export default function AdminDashboardPage() {
       medical_need: false,
       evacuation_required: false,
       priority: "NORMAL" as const,
-      status: "AI_PRIORITIZED",
+      status: "Assigned",
       address_text: "Sector 4, Auto Nagar",
       created_at: new Date().toISOString()
     }
@@ -118,47 +117,16 @@ export default function AdminDashboardPage() {
     }
   }, [currentUser]);
 
-  const handleTriggerSimulation = async (disasterType: string) => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("http://localhost:8000/api/v1/admin/simulation/trigger", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ disaster_type: disasterType, citizen_count: 50, center_lat: 16.5062, center_lon: 80.6480 })
-      });
-      if (res.ok) {
-        setMetrics(prev => ({
-          ...prev,
-          total_emergencies: prev.total_emergencies + 50,
-          critical_emergencies: prev.critical_emergencies + 20,
-        }));
-        setAiAlert({
-          title: `[DEMO DATA] AI Detected 50 New ${disasterType.toUpperCase()} Emergencies`,
-          summary: `Simulated ${disasterType} disaster event triggered. 20 critical rescue units auto-matched.`,
-          recommended_action: `Deploy reserve boats and medical personnel to Zone A.`
-        });
-      }
-    } catch (e) {
-      setMetrics(prev => ({
-        ...prev,
-        total_emergencies: prev.total_emergencies + 50,
-        critical_emergencies: prev.critical_emergencies + 20,
-      }));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleOverridePriority = (id: string, newPriority: string) => {
     setRequests(prev => prev.map(r => r.id === id ? { ...r, priority: newPriority as any } : r));
   };
 
   const handleAssignVolunteer = (id: string) => {
-    setRequests(prev => prev.map(r => r.id === id ? { ...r, status: "VOLUNTEER_ASSIGNED" } : r));
+    setRequests(prev => prev.map(r => r.id === id ? { ...r, status: "Assigned" } : r));
   };
 
   const handleResolveRequest = (id: string) => {
-    setRequests(prev => prev.map(r => r.id === id ? { ...r, status: "RESOLVED" } : r));
+    setRequests(prev => prev.map(r => r.id === id ? { ...r, status: "Done" } : r));
     setMetrics(prev => ({
       ...prev,
       critical_emergencies: Math.max(0, prev.critical_emergencies - 1),
@@ -166,7 +134,7 @@ export default function AdminDashboardPage() {
     }));
   };
 
-  // 1. App Starts on Landing Login Page
+  // 1. Starts on Landing Login Page
   if (!currentUser) {
     return <LandingLoginPage onLoginSuccess={user => setCurrentUser(user)} />;
   }
@@ -177,35 +145,36 @@ export default function AdminDashboardPage() {
       <div className="bg-[#FAFAFA] border-b border-[#EFEFEF] px-4 py-2 flex items-center justify-between text-xs">
         <div className="flex items-center space-x-2">
           <UserCheck className="w-4 h-4 text-emerald-600" />
-          <span className="text-[#737373] font-medium">Logged in as: <strong className="text-[#000000]">{currentUser.name}</strong></span>
-          <span className="bg-emerald-50 text-emerald-700 font-extrabold px-2 py-0.5 rounded-full border border-emerald-200">
+          <span className="text-[#737373] font-medium">Logged in: <strong className="text-[#000000]">{currentUser.name}</strong></span>
+          <span className="bg-emerald-50 text-emerald-700 font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-200">
             {currentUser.role} ROLE
           </span>
         </div>
         <button
           onClick={() => setCurrentUser(null)}
-          className="flex items-center gap-1 text-rose-600 hover:text-rose-700 font-bold px-2.5 py-1 bg-white rounded-xl border border-[#DBDBDB] transition shadow-sm"
+          className="flex items-center gap-1 text-rose-600 hover:text-rose-700 font-bold px-2.5 py-1 bg-white rounded-xl border border-[#DBDBDB] transition shadow-xs"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>Switch Account / Logout</span>
+          <span>Switch Role / Logout</span>
         </button>
       </div>
 
-      {/* Role 1: Citizen View */}
-      {currentUser.role === "CITIZEN" && (
-        <CitizenPortal userSession={currentUser} onLogout={() => setCurrentUser(null)} />
+      {/* Role 1: User View (Get Help & Help Others) */}
+      {currentUser.role === "USER" && (
+        <UserPortal userSession={currentUser} onLogout={() => setCurrentUser(null)} />
       )}
 
-      {/* Role 2: Volunteer View */}
-      {currentUser.role === "VOLUNTEER" && (
-        <VolunteerPortal userSession={currentUser} onLogout={() => setCurrentUser(null)} />
+      {/* Role 2: Coordinator View (Shelters, Food, Resources, Hospitals, People) */}
+      {currentUser.role === "COORDINATOR" && (
+        <CoordinatorPortal userSession={currentUser} onLogout={() => setCurrentUser(null)} />
       )}
 
-      {/* Role 3: Admin Command Center View */}
+      {/* Role 3: Admin View (Verification, Users, Coordinators, Analytics, Control) */}
       {currentUser.role === "ADMIN" && (
         <>
           <Navbar />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+            <AdminPortal userSession={currentUser} onLogout={() => setCurrentUser(null)} />
             <MetricsOverview metrics={metrics} />
             <AIAlertBanner alert={aiAlert} onViewCritical={() => {}} />
             <LiveMap />
