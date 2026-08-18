@@ -105,7 +105,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
             <div className="w-14 h-14 rounded-[18px] bg-gradient-to-tr from-[#FCAF45] via-[#E4405F] to-[#833AB4] flex items-center justify-center shadow-lg shadow-pink-500/20">
               <ShieldAlert className="w-8 h-8 text-white" />
             </div>
-            <span className="font-black text-2xl tracking-tight text-[#000000]">Disaster AI</span>
+            <span className="font-black text-2xl tracking-tight text-[#000000]">Hopeforce</span>
           </div>
 
           {/* Hero Typography */}
@@ -126,7 +126,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
                 <div className="flex items-center space-x-2 border-b border-[#F4F4F4] pb-2 mb-2">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#FF007A] to-[#E4405F] flex items-center justify-center text-white text-xs font-bold">AI</div>
                   <div>
-                    <p className="text-xs font-bold text-[#000000]">Disaster AI Assistant</p>
+                    <p className="text-xs font-bold text-[#000000]">Hopeforce AI Assistant</p>
                     <p className="text-[10px] text-[#737373]">Telugu & English STT Active</p>
                   </div>
                 </div>
@@ -163,7 +163,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
           
           {/* Heading */}
           <h2 className="text-[20px] font-semibold text-[#000000] mb-6">
-            {authMode === "LOGIN" ? "Log into Disaster AI" : "Sign up for Disaster AI"}
+            {authMode === "LOGIN" ? "Log into Hopeforce" : "Sign up for Hopeforce"}
           </h2>
 
           {/* EXACT 3 ROLE SELECTION BUTTONS */}
@@ -332,7 +332,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
           {/* Bottom Branding */}
           <div className="mt-6 text-center text-[14px] text-[#0095F6] font-semibold flex items-center justify-center gap-1">
             <span className="text-[18px]">∞</span>
-            <span>Disaster AI</span>
+            <span>Hopeforce</span>
           </div>
 
         </div>
@@ -350,7 +350,7 @@ export function LandingLoginPage({ onLoginSuccess }: Props) {
         <span>API</span>
         <span>Privacy</span>
         <span>Terms</span>
-        <span>Disaster AI Verified</span>
+        <span>Hopeforce Verified</span>
       </footer>
     </div>
   );

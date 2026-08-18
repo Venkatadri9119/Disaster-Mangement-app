@@ -13,7 +13,7 @@ export function Navbar() {
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <span className="font-extrabold text-lg text-[#000000] tracking-tight">Disaster AI</span>
+            <span className="font-extrabold text-lg text-[#000000] tracking-tight">Hopeforce</span>
             <span className="bg-rose-50 text-rose-600 text-xs px-2 py-0.5 rounded-full border border-rose-200 font-bold flex items-center gap-1">
               <Radio className="w-3 h-3 animate-pulse text-rose-500" /> COMMAND CENTER
             </span>

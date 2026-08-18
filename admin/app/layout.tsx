@@ -2,7 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Disaster AI — Emergency Response Platform",
+  title: "Hopeforce — Emergency Response Platform",
   description: "AI-first disaster management and real-time emergency response platform",
 };
 
