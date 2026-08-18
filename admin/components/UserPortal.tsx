@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Send, Mic, ShieldAlert, Globe, LogOut, MapPin, Navigation, Camera, User, HeartHandshake, CheckCircle2, ChevronRight, Sparkles, Image as ImageIcon, Bell } from "lucide-react";
+import { LiveMap } from "@/components/LiveMap";
 
 interface Props {
   userSession?: { user_id: string; name: string; preferred_language: string; phone?: string };
@@ -46,7 +47,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
     }
   ]);
 
-  // Active Emergency Request Tracking (Module 7 & Status: New -> Assigned -> Moving -> Arrived -> Done)
+  // Active Emergency Request Tracking
   const [activeRequest, setActiveRequest] = useState<{
     id: string;
     emergency: string;
@@ -153,7 +154,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
     setAiVisionResult("🔍 AI Vision: High Flood Water Level (1.5m) Detected • Critical Structural Hazard");
   };
 
-  // Send Emergency Request (Flow 4 & 6: AI Extraction)
+  // Send Emergency Request
   const handleSendMessage = async (text: string) => {
     if (!text.trim() && !selectedEmergency && !uploadedPhoto) return;
 
@@ -161,7 +162,6 @@ export function UserPortal({ userSession, onLogout }: Props) {
     setMessages(prev => [...prev, { sender: "user", text: fullMsg }]);
     setInputMsg("");
 
-    // Simulate AI Triage extraction (Module 5 & Flow 6)
     setTimeout(() => {
       const isTelugu = text.includes("వరద") || text.includes("vachindi") || text.includes("members");
       const reqId = "REQ-" + Math.floor(1000 + Math.random() * 9000);
@@ -212,7 +212,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
     }, 1200);
   };
 
-  // Helper Flow Actions (Flow 5: Respond -> Accept -> Start -> Arrived -> Done)
+  // Helper Flow Actions
   const handleHelperAction = (reqId: string, nextStatus: "Assigned" | "Moving" | "Arrived" | "Done") => {
     setNearbyRequests(prev => prev.map(r => r.id === reqId ? { ...r, status: nextStatus } : r));
   };
@@ -268,7 +268,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
         </div>
       </div>
 
-      {/* USER EXPERIENCE MODE CHOICE CARD (Requirement 3) */}
+      {/* USER EXPERIENCE MODE CHOICE CARD */}
       <div className="bg-gradient-to-r from-rose-50 to-blue-50 border border-[#EFEFEF] rounded-2xl p-4 mb-4 text-center shadow-xs">
         <h3 className="font-extrabold text-[#000000] text-sm mb-3">What do you want to do?</h3>
         <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
@@ -299,7 +299,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
         <p className="text-[10px] text-[#737373] mt-2 font-medium">You can switch modes anytime without logging out.</p>
       </div>
 
-      {/* USER PROFILE MODAL (Module 2) */}
+      {/* USER PROFILE MODAL */}
       {showProfile && (
         <div className="bg-white border border-[#EFEFEF] rounded-2xl p-5 mb-4 shadow-md">
           <div className="flex justify-between items-center mb-3">
@@ -355,11 +355,11 @@ export function UserPortal({ userSession, onLogout }: Props) {
         </div>
       )}
 
-      {/* MODE 1: GET HELP FLOW (Requirement 4) */}
+      {/* MODE 1: GET HELP FLOW */}
       {userMode === "HELP" && (
         <div className="bg-white border border-[#EFEFEF] rounded-2xl flex flex-col h-[620px] relative overflow-hidden shadow-xs">
           
-          {/* Top Location & GPS Bar */}
+          {/* Location Bar */}
           <div className="bg-[#FAFAFA] p-2.5 px-4 border-b border-[#EFEFEF] flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <MapPin className="w-4 h-4 text-rose-500 animate-bounce" />
@@ -377,7 +377,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
             </button>
           </div>
 
-          {/* Active Request Tracker Bar (Requirement 13 Simple Status: New -> Assigned -> Moving -> Arrived -> Done) */}
+          {/* Active Request Tracker Bar */}
           {activeRequest && (
             <div className="bg-rose-50 border-b border-rose-200 p-3 px-4 flex items-center justify-between">
               <div>
@@ -389,7 +389,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
               </div>
 
               <div className="flex gap-1">
-                {["New", "Assigned", "Moving", "Arrived", "Done"].map((st, i) => (
+                {["New", "Assigned", "Moving", "Arrived", "Done"].map((st) => (
                   <span
                     key={st}
                     className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${
@@ -403,7 +403,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
             </div>
           )}
 
-          {/* Step 1: Select Emergency Options (Requirement 4: Flood, Fire, Medical, Trapped, Food, Water, Other) */}
+          {/* Select Emergency Options */}
           <div className="p-2.5 bg-[#FAFAFA] border-b border-[#EFEFEF] flex items-center gap-2 overflow-x-auto">
             <span className="text-[10px] font-bold text-[#737373] uppercase shrink-0">Emergency:</span>
             {emergencyOptions.map(opt => (
@@ -421,7 +421,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
             ))}
           </div>
 
-          {/* Step 3: AI Vision Photo Detection Result (Module 6) */}
+          {/* AI Vision Result */}
           {uploadedPhoto && (
             <div className="p-3 bg-amber-50 border-b border-amber-200 flex items-center gap-3">
               <img src={uploadedPhoto} alt="Emergency photo" className="w-12 h-12 rounded-xl object-cover border border-amber-300" />
@@ -432,7 +432,7 @@ export function UserPortal({ userSession, onLogout }: Props) {
             </div>
           )}
 
-          {/* Chat Messages Display (Module 4 ChatGPT Interface) */}
+          {/* Chat Messages */}
           <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-white">
             {messages.map((m, idx) => (
               <div key={idx} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
@@ -466,10 +466,9 @@ export function UserPortal({ userSession, onLogout }: Props) {
             </button>
           </div>
 
-          {/* Bottom Controls Bar (Requirement 12 Simple 1-2 Word Buttons: Talk, Photo, Location, Send) */}
+          {/* Controls Bar */}
           <div className="p-3 bg-[#FAFAFA] border-t border-[#EFEFEF] flex items-center gap-2">
             
-            {/* Talk Button */}
             <button
               onClick={handleVoiceTrigger}
               className={`px-3 py-2.5 rounded-xl border font-bold text-xs transition flex items-center gap-1 ${
@@ -483,14 +482,12 @@ export function UserPortal({ userSession, onLogout }: Props) {
               <span>Talk</span>
             </button>
 
-            {/* Photo Button (AI Vision Module 6) */}
             <label className="px-3 py-2.5 bg-white border border-[#DBDBDB] rounded-xl text-xs font-bold text-[#000000] hover:bg-gray-100 cursor-pointer flex items-center gap-1 shadow-xs">
               <Camera className="w-4 h-4 text-purple-600" />
               <span>Photo</span>
               <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
             </label>
 
-            {/* Input Box */}
             <input
               type="text"
               placeholder="Tell me what happened..."
@@ -500,7 +497,6 @@ export function UserPortal({ userSession, onLogout }: Props) {
               className="flex-1 bg-white border border-[#DBDBDB] rounded-xl px-4 py-2 text-xs text-[#000000] placeholder-[#737373] focus:outline-none focus:border-[#0095F6]"
             />
 
-            {/* Send Button */}
             <button
               onClick={() => handleSendMessage(inputMsg)}
               className="px-4 py-2.5 bg-[#0095F6] hover:bg-[#0084FF] text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1"
@@ -512,87 +508,101 @@ export function UserPortal({ userSession, onLogout }: Props) {
         </div>
       )}
 
-      {/* MODE 2: HELP OTHERS FLOW (Requirement 5 & Flow 5) */}
+      {/* MODE 2: HELP OTHERS FLOW WITH LIVE MAP INCLUDED */}
       {userMode === "HELP_OTHERS" && (
-        <div className="bg-white border border-[#EFEFEF] rounded-2xl p-5 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="font-extrabold text-[#000000] text-base">NEARBY EMERGENCY REQUESTS</h3>
-              <p className="text-xs text-[#737373]">Help nearby citizens in distress</p>
+        <div className="space-y-6">
+          
+          {/* LIVE MAP INTEGRATED IN HELP OTHERS MODE (Module 12 & Requirement 11) */}
+          <LiveMap />
+
+          {/* NEARBY EMERGENCY REQUESTS LIST */}
+          <div className="bg-white border border-[#EFEFEF] rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-extrabold text-[#000000] text-base">NEARBY EMERGENCY REQUESTS</h3>
+                <p className="text-xs text-[#737373]">Select a request on the map or feed to respond</p>
+              </div>
+
+              <button
+                onClick={() => setNearbyRequests([...nearbyRequests])}
+                className="px-3 py-1.5 bg-blue-50 text-[#0095F6] rounded-xl text-xs font-bold border border-blue-200 hover:bg-blue-100 transition"
+              >
+                Nearby
+              </button>
             </div>
 
-            <button
-              onClick={() => setNearbyRequests([...nearbyRequests])}
-              className="px-3 py-1.5 bg-blue-50 text-[#0095F6] rounded-xl text-xs font-bold border border-blue-200 hover:bg-blue-100 transition"
-            >
-              Nearby
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {nearbyRequests.map(req => (
-              <div key={req.id} className="bg-[#FAFAFA] border border-[#EFEFEF] rounded-xl p-4 hover:border-[#0095F6]/40 transition">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md border ${
-                    req.prio === "CRITICAL" ? "bg-rose-50 text-rose-600 border-rose-200" : "bg-amber-50 text-amber-700 border-amber-200"
-                  }`}>
-                    🔴 {req.prio} • {req.emergency}
-                  </span>
-                  <span className="text-xs font-bold text-[#0095F6] bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
-                    Status: {req.status}
-                  </span>
-                </div>
-
-                <h4 className="font-bold text-[#000000] text-sm mt-1">{req.people} People Trapped • {req.distance} away</h4>
-                <p className="text-xs text-[#737373] mt-0.5 font-medium">{req.address}</p>
-                <p className="text-xs text-purple-700 font-bold mt-1">Required Skill: {req.skill} • Estimated Arrival: {req.eta}</p>
-
-                {/* Requirement 12 Simple 1-2 Word Buttons: Respond, Accept, Start, Arrived, Done */}
-                <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
-                  {req.status === "New" && (
-                    <button
-                      onClick={() => handleHelperAction(req.id, "Assigned")}
-                      className="px-4 py-2 bg-[#0095F6] hover:bg-[#0084FF] text-white rounded-xl text-xs font-bold shadow-xs transition"
-                    >
-                      Respond
-                    </button>
-                  )}
-
-                  {req.status === "Assigned" && (
-                    <button
-                      onClick={() => handleHelperAction(req.id, "Moving")}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-xs transition"
-                    >
-                      Accept & Start
-                    </button>
-                  )}
-
-                  {req.status === "Moving" && (
-                    <button
-                      onClick={() => handleHelperAction(req.id, "Arrived")}
-                      className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow-xs transition"
-                    >
-                      Arrived
-                    </button>
-                  )}
-
-                  {req.status === "Arrived" && (
-                    <button
-                      onClick={() => handleHelperAction(req.id, "Done")}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-xs transition"
-                    >
-                      Complete / Done
-                    </button>
-                  )}
-
-                  {req.status === "Done" && (
-                    <span className="text-xs font-extrabold text-emerald-600 flex items-center gap-1">
-                      <CheckCircle2 className="w-4 h-4" /> Rescue Completed
+            <div className="space-y-4">
+              {nearbyRequests.map(req => (
+                <div key={req.id} className="bg-[#FAFAFA] border border-[#EFEFEF] rounded-xl p-4 hover:border-[#0095F6]/40 transition">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <span className={`text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md border ${
+                      req.prio === "CRITICAL" ? "bg-rose-50 text-rose-600 border-rose-200" : "bg-amber-50 text-amber-700 border-amber-200"
+                    }`}>
+                      🔴 {req.prio} • {req.emergency}
                     </span>
-                  )}
+                    <span className="text-xs font-bold text-[#0095F6] bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                      Status: {req.status}
+                    </span>
+                  </div>
+
+                  <h4 className="font-bold text-[#000000] text-sm mt-1">{req.people} People Trapped • {req.distance} away</h4>
+                  <p className="text-xs text-[#737373] mt-0.5 font-medium">{req.address}</p>
+                  <p className="text-xs text-purple-700 font-bold mt-1">Required Skill: {req.skill} • Estimated Arrival: {req.eta}</p>
+
+                  <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+                    <button
+                      onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=16.5085,80.6420&travelmode=driving`, "_blank")}
+                      className="px-3 py-2 bg-white hover:bg-gray-100 text-[#000000] border border-[#DBDBDB] rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs"
+                    >
+                      <Navigation className="w-3.5 h-3.5 text-[#0095F6]" />
+                      <span>Directions</span>
+                    </button>
+
+                    {req.status === "New" && (
+                      <button
+                        onClick={() => handleHelperAction(req.id, "Assigned")}
+                        className="px-4 py-2 bg-[#0095F6] hover:bg-[#0084FF] text-white rounded-xl text-xs font-bold shadow-xs transition"
+                      >
+                        Respond
+                      </button>
+                    )}
+
+                    {req.status === "Assigned" && (
+                      <button
+                        onClick={() => handleHelperAction(req.id, "Moving")}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-xs transition"
+                      >
+                        Accept & Start
+                      </button>
+                    )}
+
+                    {req.status === "Moving" && (
+                      <button
+                        onClick={() => handleHelperAction(req.id, "Arrived")}
+                        className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-bold shadow-xs transition"
+                      >
+                        Arrived
+                      </button>
+                    )}
+
+                    {req.status === "Arrived" && (
+                      <button
+                        onClick={() => handleHelperAction(req.id, "Done")}
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-xs transition"
+                      >
+                        Complete / Done
+                      </button>
+                    )}
+
+                    {req.status === "Done" && (
+                      <span className="text-xs font-extrabold text-emerald-600 flex items-center gap-1">
+                        <CheckCircle2 className="w-4 h-4" /> Rescue Completed
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
