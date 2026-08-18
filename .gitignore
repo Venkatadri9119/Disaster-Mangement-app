@@ -1,0 +1,32 @@
+# Node / Next.js
+admin/node_modules/
+admin/.next/
+admin/out/
+admin/build/
+
+# Python / FastAPI
+backend/__pycache__/
+backend/*/__pycache__/
+backend/*/*/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+venv/
+.venv/
+
+# Flutter / Mobile
+mobile/.dart_tool/
+mobile/.idea/
+mobile/.packages
+mobile/build/
+mobile/.pub/
+mobile/pubspec.lock
+
+# Environment & Databases
+.env
+.env.local
+*.log
+disaster_ai.db
+.DS_Store

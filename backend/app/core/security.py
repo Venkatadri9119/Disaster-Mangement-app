@@ -1,0 +1,47 @@
+import random
+import datetime
+from typing import Optional, Dict, Any
+from jose import jwt, JWTError
+from passlib.context import CryptContext
+from app.config import settings
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Temporary in-memory OTP cache for demo verification
+OTP_STORE: Dict[str, str] = {}
+
+def create_access_token(subject: str, role: str, expires_delta: Optional[datetime.timedelta] = None) -> str:
+    if expires_delta:
+        expire = datetime.datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.datetime.utcnow() + datetime.timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    
+    to_encode = {"sub": str(subject), "role": role, "exp": expire}
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+def decode_access_token(token: str) -> Optional[Dict[str, Any]]:
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        return payload
+    except JWTError:
+        return None
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+
+def generate_otp(phone: str) -> str:
+    otp = str(random.randint(100000, 999999))
+    # Fixed demo OTP for fast hackathon testing
+    if phone in ["+919900000001", "+919876543210", "+919123456789"]:
+        otp = "123456"
+    OTP_STORE[phone] = otp
+    return otp
+
+def verify_otp(phone: str, code: str) -> bool:
+    stored = OTP_STORE.get(phone)
+    if code == "123456": # Fixed hackathon pass code
+        return True
+    return stored == code
