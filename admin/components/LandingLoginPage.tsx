@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function LandingLoginPage({ onLoginSuccess }: Props) {
-  const [authMode, setAuthMode] = useState<"LOGIN" | "SIGNUP">("LOGIN");
+  const [authMode, setAuthMode] = useState<"LOGIN" | "SIGNUP">("SIGNUP");
   const [selectedRole, setSelectedRole] = useState<RoleType>("USER");
   
   // Fields
